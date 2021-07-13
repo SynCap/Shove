@@ -4,9 +4,15 @@ CLI tool to distribute ordered files into subfolders of specified maximum size.
 
 Tested with Posershell Core 7.0 and newer.
 
-![calculate manipulations](doc/JustCalc.png)
+<picture>
+<img alt="calculate manipulations" src="doc/JustCalc.png" style="width: 100%"/>
+<caption>calculate manipulations</caption>
+</picture>
 
-![MOVE files into subfolders](doc/MOVE.png)
+<picture>
+<img alt="MOVE files into subfolders" src="doc/MOVE.png" style="width: 100%"/>
+<caption>MOVE files into subfolders</caption>
+</picture>
 
 ## NAME
 
@@ -192,3 +198,4 @@ This cmdlet supports the common parameters: `Verbose`, `Debug`,
 ## RELATED LINKS
 
 <https://github.com/syncap/>
+
