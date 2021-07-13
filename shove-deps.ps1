@@ -1,3 +1,9 @@
+<#
+.description
+
+    Following functions included into Shove pack for independancy of Shove itself. Same time
+    this functions is part of Evereday ps collection -- <https://github.com/syncap/ps-everyday>
+#>
 
 # Simple divider half screen width size
 function hr {"`u{2014}"*(0 -bor [Console]::WindowWidth / 2)}
