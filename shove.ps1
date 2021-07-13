@@ -7,7 +7,7 @@
 	Numeration of files in each subfolder starts from 01.
 	Each subfolder will contain approx $MaxSubFolderSize in sum.
 
-	-DoNotResetNumeration is not mention when -DoNotRename is set
+	-e2eNumeration is not mention when -DoNotRename is set
 .example
 
 	-- Example 1 --
@@ -55,12 +55,12 @@ param (
 	# By default SHOVE will start numerations in each subfolder.
 	# If you do not want this but get the all processed files numerated
 	# end-to-end then use this switch
-	[Alias('NR')]
-	[Switch] $DoNotResetNumeration,
+	[Alias('E')]
+	[Switch] $e2eNumeration,
 
 	# Do not use autonumeration for new names of files.
 	# Leave file names as it was before processing
-	[Alias('DR')]
+	[Alias('D,DNR')]
 	[Switch] $DoNotRename,
 
 	# Just calculate repositions and renames, almost like as use -WhatIf
@@ -108,7 +108,7 @@ foreach($File in $FileList) {
 		div $SzAcc
 		$CntDir++
 		$SzAcc = 0
-		if (!$DoNotResetNumeration) {
+		if (!$e2eNumeration) {
 			$CntFls = 1
 		}
 	};
