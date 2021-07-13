@@ -81,9 +81,6 @@ if ($Help) {
 	Exit
 }
 
-# простой разделитель
-function hr {"`u{2014}"*(0 -bor [Console]::WindowWidth / 2)}
-
 # разделитель с указанием размера
 filter div($sz) {
 	"$(hr)`e[33m {0:n1}`e[36mM`e[0m" -f ($sz / 1Mb)
