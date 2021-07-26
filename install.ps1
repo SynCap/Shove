@@ -1,3 +1,6 @@
+# $GitHubRepoUrl = 'https://raw.github.com/syncap/shove/master/'
+$GitHubRepoUrl = 'https://raw.githubusercontent.com/SynCap/Shove/master/'
+
 $Files = @(
     'shove.psm1',
     'shove-deps.psm1'
@@ -12,17 +15,18 @@ function downloadFiles {
         [parameter(mandatory)]
         [String[]] $List,
         [String] $Dest = '.',
-        [String] $BaseUrl = 'https://raw.github.com/syncap/shove/master/'
+        [String] $BaseUrl = ''
     )
     $Cnt = 0
-    foreach ($Url in $List) {
-        $r = Invoke-WebRequest $BaseUrl+$Url
-        $m = (ParseUrl $Url)
-        if ($m) {
-            $FName = Join-Path -Path $Dest -ChildPath ('{0:d3}.{1}' -f ++$Cnt, ($m.Ext ?? (($r.Headers['Content-Type'] -split '/')[1] ?? '')) -join '')
-            Set-Content -AsByteStream -Value $r.Content -Path $FName
+    foreach ($File in $List) {
+        println ("{0,2}/{1} Download file: `e[33m{2}`e[0m" -f ++$Cnt,$List.Count,$File)
+        $Url = "$BaseUrl$File"
+        $r = Invoke-WebRequest $Url
+        if ($r -and $r.StatusDescription -eq 'OK') {
+            $FName = Join-Path -Path $Dest -ChildPath $File
+            Set-Content -Path $FName -Value $r.Content -Encoding utf8
         } else {
-            Write-Error 'Bad URL'
+            throw 'Bad URL'
             $False
         }
     }
@@ -30,12 +34,16 @@ function downloadFiles {
 }
 
 
-println 'Create module directory'
+println 'Create module directory — ',"`e[36m",$ShoveHomePath,"`e[0m"
 New-Item -Type Container -Force -path $ShoveHomePath > $Null
 
-println 'Download and install'
-downloadFiles -List $Files -Dest $ShoveHomePath
+try {
+    downloadFiles -List $Files -Dest $ShoveHomePath -BaseUrl $GitHubRepoUrl
+}
+catch {
+    println "`e[91m",'Installation failed',"`e[0m"
+    exit 1
+}
 
-
-println 'Installed!'
-println 'Use "Import-Module shove" and then "shove -Help"'
+println "`e[33m",'Installation complete.',"`e[0m"
+println 'Use "',"`e[36m",'Import-Module shove',"`"`e[0m",' and then "',"`e[36m",'shove -Help',"`e[0m`""
