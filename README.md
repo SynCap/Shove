@@ -22,6 +22,14 @@ Run following code in your Powershell terminal:
 iex (iwr https://j.mp/shove-psm).Content
 ```
 
+In some cases you'll need to elevate Powershell console credentials, so try next:
+
+```Powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force;`
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;`
+iex (iwr https://j.mp/shove-psm).Content
+```
+
 
 ## NAME
 
