@@ -20,7 +20,6 @@ Run following code in your Powershell terminal:
 
 ```Posershell
 iex (iwr https://j.mp/shove-psm).Content
-
 ```
 
 
