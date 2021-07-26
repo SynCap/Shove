@@ -5,13 +5,13 @@ CLI tool to distribute ordered files into subfolders of specified maximum size.
 Tested with Posershell Core 7.0 and newer.
 
 <figure>
-    <img alt="Previw results" src="doc/JustCalc.png" style="width:100%"/>
     <figcaption>calculate manipulations</figcaption>
+    <img alt="Previw results" src="doc/JustCalc.png" style="width:100%"/>
 </figure>
 
 <figure>
-    <img alt="MOVE files" src="doc/MOVE.png" style="width:100%"/>
     <figcaption>MOVE files into subfolders</figcaption>
+    <img alt="MOVE files" src="doc/MOVE.png" style="width:100%"/>
 </figure>
 
 # INSTALL
