@@ -3,28 +3,43 @@
 	Group files from specified folder by bunch size into subfolders
 
 .description
-	New subfolders created as needed and has ordinal numerated names.
-	Numeration of files in each subfolder starts from 01.
-	Each subfolder will contain approx $MaxSubFolderSize in sum.
+	New subfolders created and each subfolder will contain approx `MaxSubFolderSize` in sum.
 
-	-e2eNumeration is not mention when -DoNotRename is set
+	*_NOTE_* that you must specify max size in bytes or use `Kb/Mb/GB/..` notation.
+
+	Numeration of files starts from 01. You may restart numeration in each subfolder with
+	use `SubfolderCounters` switch.
+
+	*_NOTE_* before you'll actually Move/Copy files try to use `WhatIf` switch to viw
+	how the Shove will distribute and rename your files
+
+	Also you can gather files from subfolders using `Recurse` switch even you had used
+	the Shove earlier
+
 .example
 
 	-- Example 1 --
 
 	# Copy files by bunches about 80mb into subfolders
+	# and rename files by ordinal number
+	# with restarting numeration in each subfolder
 
-	shove -Max 80mb -NR -DR
+	`shove -Max 315mb -N -S -C`
 
 	-- Example 2 --
 
 	# Show how SHOVE will MOVE files by banches about 100mb
 	# -WhatIf can help to view how files will be distributed
-	# by subfolders
+	# by subfolders and tells about additional actions
 
-	shove -max 97mb -NR -M -WhatIf
+	`shove . *.mp3 -r -max 205mb -N -K -WhatIf`
+
+	# OR
+
+	`shove . *.mp3 -r -max 205mb -n -k -j`
 
 #>
+
 [CmdletBinding(
 	# ConfirmImpact = 'Medium',
 	SupportsShouldProcess = $true
@@ -48,22 +63,20 @@ param (
 	[Alias('Max')]
 	[int] $MaxSubFolderSize = 250Mb,
 
-	# MOVE files instead of COPY
-	[Alias('M')]
-	[Switch] $Move,
+	# COPY files instead of MOVE
+	[Alias('c')]
+	[Switch] $Copy,
 
-	# By default SHOVE will start numerations in each subfolder.
-	# If you do not want this but get the all processed files numerated
-	# end-to-end then use this switch
-	[Alias('E')]
-	[Switch] $e2eNumeration,
+	# Use autonumeration for new names of files.
+	[Alias('N')]
+	[Switch] $Numeration,
 
-	# Do not use autonumeration for new names of files.
-	# Leave file names as it was before processing
-	[Alias('D,DNR')]
-	[Switch] $DoNotRename,
+	# SHOVE will restart numerations in each subfolder.
+	[Alias('S')]
+	[Switch] $SubfolderCounters,
 
-	# Just calculate repositions and renames, almost like as use -WhatIf
+	# Just calculate repositions and renames, almost like to use `-WhatIf`
+	# or `-Verbose` but less verbose
 	[Alias('J')]
 	[Switch] $JustCalc,
 
@@ -71,8 +84,17 @@ param (
 	[Switch] $Help,
 
 	# This is It!
-	[Switch] $Recurse
+	[Alias('R')]
+	[Switch] $Recurse,
+
+	# Find and Remove all Empty subfolders
+	[Alias('K')]
+	[Switch] $KillEmpty
 )
+
+# if ($PSCmdlet.ShouldProcess((Join-Path $PSScriptRoot 'shove-deps.psm1'), 'Load dependancies')) {
+# 	Import-Module (Join-Path $PSScriptRoot 'shove-deps.psm1') -Force
+# }
 
 if ($Help) {
 	$MyInvocation
@@ -80,6 +102,9 @@ if ($Help) {
 	Get-Help $MyInvocation.MyCommand
 	Exit
 }
+
+# простой разделитель
+function hr {"`u{2014}"*(0 -bor [Console]::WindowWidth / 2)}
 
 # разделитель с указанием размера
 filter div($sz) {
@@ -105,11 +130,11 @@ foreach($File in $FileList) {
 		div $SzAcc
 		$CntDir++
 		$SzAcc = 0
-		if (!$e2eNumeration) {
+		if ($SubfolderCounters) {
 			$CntFls = 1
 		}
 	};
-	$NewName = $DoNotRename ? $File.Name : "{0}{1}" -f $CntFls,$File.Extension
+	$NewName = $Numeration ? "{0}{1}" -f $CntFls,$File.Extension : $File.Name
 	$TargetFileName = ( Join-Path -Path $TargetDir -ChildPath ("$TemplateSubFName\{1}" -f $CntDir,$NewName) )
 	$DestDir =($TemplateSubFName -f $CntDir)
 	$Destination = (Join-Path $TargetDir $DestDir)
@@ -121,8 +146,8 @@ foreach($File in $FileList) {
 	}
 	if(
 		-not $JustCalc -and $PSCmdlet.ShouldProcess(
-			$File.Name,
-			"$( $Move ? 'Move' : 'Copy' ) file from `e[35m$(Resolve-Path -Relative $File.FullName)`e[0m to subfolder `e[36m$DestDir`e[0m"
+			(Resolve-Path -Relative $File.FullName),
+			"$( $Copy ? 'Copy' :  'Move' ) file to `e[36m$DestDir`e[0m\`e[96m$($File.Name)`e[0m"
 		)
 	) {
 		$Params = @{
@@ -131,10 +156,33 @@ foreach($File in $FileList) {
 			Force = $true;
 			Confirm = $false
 		}
-		if ($Move) {Move-Item @Params} else {Copy-Item @Params}
+		if (!$Copy) {Move-Item @Params} else {Copy-Item @Params}
 	}
 }
 
 div $SzAcc
 
-Show-FolderSizes -DirsOnly $SrcDir | Format-Table
+if ($KillEmpty) {
+	$cntErased = 0
+	$toSkip = @()
+	println (hr),"`nErase empty dirs"
+	for(;;) {
+		$dirs = Get-ChildItem $Path -Directory -Recurse |
+			Where-Object { -not ($_.FullName -in $toSkip) -and ( 0 -eq (Get-ChildItem $_).Count ) }
+		if (0 -lt $dirs.Count) {
+			$dirs | ForEach-Object {
+				println $_.Name;
+				if (-not $JustCalc -and $PSCmdlet.ShouldProcess( $_.Name, "Remove folder" ) ) {
+					Remove-Item $_
+					$cntErased += $dirs.Count
+				} else { $toSkip += $_.FullName }
+			}
+		} else { break }
+	}
+	println "Empty folders erased: `e[33m",$cntErased,"`e[0m"
+	if ($JustCalc -or $toSkip.Count) {
+		println "Empty folders that CAN be erased: `e[33m",$toSkip.Count,"`e[0m"
+	}
+}
+
+Show-FolderSizes $SrcDir | Format-Table
