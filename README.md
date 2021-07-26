@@ -4,15 +4,25 @@ CLI tool to distribute ordered files into subfolders of specified maximum size.
 
 Tested with Posershell Core 7.0 and newer.
 
-<picture>
-<img alt="calculate manipulations" src="doc/JustCalc.png" style="width: 100%"/>
-<caption>calculate manipulations</caption>
-</picture>
+<figure>
+    <img alt="Previw results" src="doc/JustCalc.png" style="width:100%"/>
+    <figcaption>calculate manipulations</figcaption>
+</figure>
 
-<picture>
-<img alt="MOVE files into subfolders" src="doc/MOVE.png" style="width: 100%"/>
-<caption>MOVE files into subfolders</caption>
-</picture>
+<figure>
+    <img alt="MOVE files" src="doc/MOVE.png" style="width:100%"/>
+    <figcaption>MOVE files into subfolders</figcaption>
+</figure>
+
+# INSTALL
+
+Run following code in your Powershell terminal:
+
+```Posershell
+
+
+```
+
 
 ## NAME
 
