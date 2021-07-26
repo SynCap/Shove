@@ -1,7 +1,11 @@
+$toDL = @(
+    'https://raw.github.com/syncap/shove/master/shove.psm1'.
+    'https://raw.github.com/syncap/shove/master/shove-deps.psm1'
+)
 
 $ShoveHomePath = "$(($env:PSModulePath -split ";")[0])\Shove"
 
-function downloadList {
+function downloadFiles {
     param(
         [parameter(mandatory,position=0)] [String[]] $urlList,
         [parameter(position=1)] [String] $Dest = '.'
@@ -27,8 +31,8 @@ Write-Host "Creating module directory"
 New-Item -Type Container -Force -path $ShoveHomePath > $Null
 
 Write-Host "Download and install"
-(New-Object Net.WebClient).DownloadString("https://raw.github.com/syncap/shove/master/shove.psm1") | Out-File "$ShoveHomePath\shove.psm1"
-(New-Object Net.WebClient).DownloadString("https://raw.github.com/syncap/shove/master/shove-deps.psm1") | Out-File "$ShoveHomePath\shove-deps.psm1"
+
+downloadFiles $toDL $ShoveHomePath
 
 Write-Host "Installed!"
-Write-Host 'Use "Import-Module pswatch" and then "watch"'
+Write-Host 'Use "Import-Module shove" and then "shove -Help"'
