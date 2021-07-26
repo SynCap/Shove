@@ -19,7 +19,7 @@ Tested with Posershell Core 7.0 and newer.
 Run following code in your Powershell terminal:
 
 ```Posershell
-
+iex (iwr https://j.mp/shove-psm).Content
 
 ```
 
