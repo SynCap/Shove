@@ -1,43 +1,42 @@
 <#
-.synopsis
-	Group files from specified folder by bunch size into subfolders
+	.synopsis
+		Group files from specified folder by bunch size into subfolders
 
-.description
-	New subfolders created and each subfolder will contain approx `MaxSubFolderSize` in sum.
+	.description
+		New subfolders created and each subfolder will contain approx `MaxSubFolderSize` in sum.
 
-	*_NOTE_* that you must specify max size in bytes or use `Kb/Mb/GB/..` notation.
+		*_NOTE_* that you must specify max size in bytes or use `Kb/Mb/GB/..` notation.
 
-	Numeration of files starts from 01. You may restart numeration in each subfolder with
-	use `SubfolderCounters` switch.
+		Numeration of files starts from 01. You may restart numeration in each subfolder with
+		use `SubfolderCounters` switch.
 
-	*_NOTE_* before you'll actually Move/Copy files try to use `WhatIf` switch to viw
-	how the Shove will distribute and rename your files
+		*_NOTE_* before you'll actually Move/Copy files try to use `WhatIf` switch to viw
+		how the Shove will distribute and rename your files
 
-	Also you can gather files from subfolders using `Recurse` switch even you had used
-	the Shove earlier
+		Also you can gather files from subfolders using `Recurse` switch even you had used
+		the Shove earlier
 
-.example
+	.example
 
-	-- Example 1 --
+		-- Example 1 --
 
-	# Copy files by bunches about 80mb into subfolders
-	# and rename files by ordinal number
-	# with restarting numeration in each subfolder
+		# Copy files by bunches about 80mb into subfolders
+		# and rename files by ordinal number
+		# with restarting numeration in each subfolder
 
-	`shove -Max 315mb -N -S -C`
+		`shove -Max 315mb -N -S -C`
 
-	-- Example 2 --
+		-- Example 2 --
 
-	# Show how SHOVE will MOVE files by banches about 100mb
-	# -WhatIf can help to view how files will be distributed
-	# by subfolders and tells about additional actions
+		# Show how SHOVE will MOVE files by banches about 100mb
+		# -WhatIf can help to view how files will be distributed
+		# by subfolders and tells about additional actions
 
-	`shove . *.mp3 -r -max 205mb -N -K -WhatIf`
+		`shove . *.mp3 -r -max 205mb -N -K -WhatIf`
 
-	# OR
+		# OR
 
-	`shove . *.mp3 -r -max 205mb -n -k -j`
-
+		`shove . *.mp3 -r -max 205mb -n -k -j`
 #>
 
 [CmdletBinding(
