@@ -35,17 +35,26 @@ Group files from specified folder by bunch size into subfolders
 
 ## SYNTAX
 
-    shove.ps1 [[-SrcDir] <String>] [-TargetDir <String>] [[-Mask] <String>]
-    [-MaxSubFolde rSize <Int32>] [-Move] [-e2eNumeration][-DoNotRename]
-    [-JustCalc] [-Help] [-Recurse] [-WhatIf] [-Confir m] [<CommonParameters>]
+    shove [[-SrcDir] <String>] [-TargetDir <String>] [[-Mask] <String>]
+    [-MaxSubFolderSize <Int32>] [-Copy] [-Numeration] [-SubfolderCounters]
+    [-JustCalc] [-Help] [-Recurse] [-KillEmpty] [-WhatIf] [-Confirm]
+    [<CommonParameters>]
+
 
 ## DESCRIPTION
 
-New subfolders created as needed with ordinal numerated names.
-    Numeration of files in each subfolder starts from `001`.
-    Each subfolder will contain approx $MaxSubFolderSize in sum but not exceed.
+New subfolders created and each subfolder will contain approx `MaxSubFolderSize` in sum.
 
-`-e2eNumeration` is not mention when `-DoNotRename` is set
+*_NOTE_* that you must specify max size in bytes or use `Kb/Mb/GB/..` notation.
+
+Numeration of files starts from 01. You may restart numeration in each subfolder with
+use `SubfolderCounters` switch.
+
+*_NOTE_* before you'll actually Move/Copy files try to use `WhatIf` switch to viw
+how the Shove will distribute and rename your files
+
+Also you can gather files from subfolders using `Recurse` switch even you had used
+the Shove earlier
 
 
 ## PARAMETERS
@@ -56,7 +65,7 @@ Folder where to look for files
 
     Required?                    false
     Position?                    1
-    Default value                $PWD   # Current directory
+    Default value                $PWD
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
@@ -92,21 +101,9 @@ exact sizes use -WhatIf first
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -Move [<SwitchParameter>]
+### -Copy [<SwitchParameter>]
 
-MOVE files instead of COPY
-
-    Required?                    false
-    Position?                    named
-    Default value                False  # Use COPY
-    Accept pipeline input?       false
-    Accept wildcard characters?  false
-
-### -e2eNumeration [<SwitchParameter>]
-
-By default SHOVE will start numerations in each subfolder.
-When you do not want this but need to get the all processed files numerated
-end-to-end then use this switch
+COPY files instead of MOVE
 
     Required?                    false
     Position?                    named
@@ -114,16 +111,27 @@ end-to-end then use this switch
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -DoNotRename [<SwitchParameter>]
+### -Numeration [<SwitchParameter>]
 
-Do not use autonumeration for new names of files.
-Leave file names as it was before processing
+Use autonumeration for new names of files.
 
     Required?                    false
     Position?                    named
-    Default value                False  # Use autonumeration
+    Default value                False
     Accept pipeline input?       false
     Accept wildcard characters?  false
+
+### -SubfolderCounters [<SwitchParameter>]
+
+The Shove will restart numerations in each subfolder.
+
+    Required?                    false
+    Position?                    named
+    Default value                False
+    Accept pipeline input?       false
+    Accept wildcard characters?  false
+
+
 
 ### -JustCalc [<SwitchParameter>]
 
@@ -153,10 +161,20 @@ This is It! Recursive search for the files in all subfolders of Source Directory
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
+### -KillEmpty [<SwitchParameter>]
+
+Find and Remove all Empty subfolders
+
+    Required?                    false
+    Position?                    named
+    Default value                False
+    Accept pipeline input?       false
+    Accept wildcard characters?  false
+
 ### -WhatIf [<SwitchParameter>]
 
-Don't actually COPY/MOVE files but get detailed information about what will be
-done
+Don't actually COPY/MOVE files or other actions like *_KILL_* but get detailed
+information about what will be done
 
     Required?                    false
     Position?                    named
