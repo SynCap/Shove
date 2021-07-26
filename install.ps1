@@ -31,4 +31,4 @@ Write-Host "Download and install"
 (New-Object Net.WebClient).DownloadString("https://raw.github.com/syncap/shove/master/shove-deps.psm1") | Out-File "$ShoveHomePath\shove-deps.psm1"
 
 Write-Host "Installed!"
-Write-Host 'Use "Import-Module pswatch" and then "watch"'
+Write-Host 'Use "Import-Module shove" and then "shove -Help"'
