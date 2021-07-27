@@ -102,9 +102,6 @@ if ($Help) {
 	Exit
 }
 
-# простой разделитель
-function hr {"`u{2014}"*(0 -bor [Console]::WindowWidth / 2)}
-
 # разделитель с указанием размера
 filter div($sz) {
 	"$(hr)`e[33m {0:n1}`e[36mM`e[0m" -f ($sz / 1Mb)
@@ -124,7 +121,8 @@ $SzAcc = 0;
 $TemplateSubFName = '{0:d3}';
 
 foreach($File in $FileList) {
-	Write-Debug "File - $($File.FullName)"
+	$RelativeFileName = Resolve-Path -Relative $File.FullName
+	Write-Debug "File - $RelativeFileName"
 	if(($SzAcc + $File.Length) -gt $MaxSubFolderSize){
 		div $SzAcc
 		$CntDir++
@@ -133,19 +131,19 @@ foreach($File in $FileList) {
 			$CntFls = 1
 		}
 	};
-	$NewName = $Numeration ? "{0}{1}" -f $CntFls,$File.Extension : $File.Name
+	$NewName = $Numeration ? "{0:d2}{1}" -f $CntFls,$File.Extension : $File.Name
 	$TargetFileName = ( Join-Path -Path $TargetDir -ChildPath ("$TemplateSubFName\{1}" -f $CntDir,$NewName) )
 	$DestDir =($TemplateSubFName -f $CntDir)
 	$Destination = (Join-Path $TargetDir $DestDir)
 	$SzAcc += $File.Length
 	$CntFls++
-	"{0} `e[35m`u{f553}`e[33m {1}`t`e[36m{2,3:n1}`e[0mM" -f $File.Name,$TargetFileName,($File.Length / 1Mb)
+	"{0} `e[35m`u{f553}`e[33m {1}`t`e[36m{2,7:n1}`e[0m" -f $RelativeFileName,$TargetFileName,($File.Length / 1Mb)
 	if (-not $JustCalc -and -not (Test-Path $Destination) -and $PSCmdlet.ShouldProcess($DestDir, 'Create subfolder')) {
 		New-Item -Path $Destination -ItemType "directory" > $null
 	}
 	if(
 		-not $JustCalc -and $PSCmdlet.ShouldProcess(
-			(Resolve-Path -Relative $File.FullName),
+			($RelativeFileName),
 			"$( $Copy ? 'Copy' :  'Move' ) file to `e[36m$DestDir`e[0m\`e[96m$($File.Name)`e[0m"
 		)
 	) {
@@ -162,26 +160,7 @@ foreach($File in $FileList) {
 div $SzAcc
 
 if ($KillEmpty) {
-	$cntErased = 0
-	$toSkip = @()
-	println (hr),"`nErase empty dirs"
-	for(;;) {
-		$dirs = Get-ChildItem $Path -Directory -Recurse |
-			Where-Object { -not ($_.FullName -in $toSkip) -and ( 0 -eq (Get-ChildItem $_).Count ) }
-		if (0 -lt $dirs.Count) {
-			$dirs | ForEach-Object {
-				println $_.Name;
-				if (-not $JustCalc -and $PSCmdlet.ShouldProcess( $_.Name, "Remove folder" ) ) {
-					Remove-Item $_
-					$cntErased += $dirs.Count
-				} else { $toSkip += $_.FullName }
-			}
-		} else { break }
-	}
-	println "Empty folders erased: `e[33m",$cntErased,"`e[0m"
-	if ($JustCalc -or $toSkip.Count) {
-		println "Empty folders that CAN be erased: `e[33m",$toSkip.Count,"`e[0m"
-	}
+	Remove-EmptySubfolders $Path -JustCalc:$JustCalc
 }
 
 Show-FolderSizes $SrcDir | Format-Table

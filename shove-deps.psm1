@@ -76,3 +76,34 @@ filter Show-FolderSizes {
 	hr;
 	("Total size: `e[33m{0}`e[0m" -f (ShortSize (Get-FolderSize $Path -Force:$Force)))
 }
+
+function Remove-EmptySubfolders {
+	[CmdletBinding(
+		SupportsShouldProcess = $true
+	)]
+	param (
+		[String] $Path = $PWD,
+		[Switch] $JustCalc
+	)
+
+	$cntErased = 0
+	$toSkip = @()
+	println (hr),"`nErase empty dirs"
+	for(;;) {
+		$dirs = Get-ChildItem $Path -Directory -Recurse |
+			Where-Object { -not ($_.FullName -in $toSkip) -and ( 0 -eq (Get-ChildItem $_).Count ) }
+		if (0 -lt $dirs.Count) {
+			$dirs | ForEach-Object {
+				println $_.Name;
+				if (-not $JustCalc -and $PSCmdlet.ShouldProcess( $_.Name, "Remove folder" ) ) {
+					Remove-Item $_
+					$cntErased += $dirs.Count
+				} else { $toSkip += $_.FullName }
+			}
+		} else { break }
+	}
+	println "Empty folders erased: `e[33m",$cntErased,"`e[0m"
+	if ($JustCalc -or $toSkip.Count) {
+		println "Empty folders that CAN be erased: `e[33m",$toSkip.Count,"`e[0m"
+	}
+}
