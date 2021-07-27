@@ -3,7 +3,9 @@ $GitHubRepoUrl = 'https://raw.githubusercontent.com/SynCap/Shove/master/'
 
 $Files = @(
     'shove.psm1',
-    'shove-deps.psm1'
+    'shove.psd1',
+    'shove-deps.psm1',
+    'shove-deps.psd1'
 )
 
 $ShoveHomePath = "$(($env:PSModulePath -split ";")[0])\Shove"
