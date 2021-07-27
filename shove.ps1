@@ -74,8 +74,8 @@ param (
 	[Alias('S')]
 	[Switch] $SubfolderCounters,
 
-	# Just calculate repositions and renames, almost like to use `-WhatIf`
-	# or `-Verbose` but less verbose
+	# Just calculate repositions and renames
+	# Almost like to use `-WhatIf` but less verbose
 	[Alias('J')]
 	[Switch] $JustCalc,
 
@@ -101,6 +101,8 @@ if ($Help) {
 	Get-Help $MyInvocation.MyCommand
 	Exit
 }
+
+& '.\shove-deps.ps1'
 
 # разделитель с указанием размера
 filter div($sz) {

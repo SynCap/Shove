@@ -2,13 +2,11 @@
 $GitHubRepoUrl = 'https://raw.githubusercontent.com/SynCap/Shove/master/'
 
 $Files = @(
-    'shove.psm1',
-    'shove.psd1',
-    'shove-deps.psm1',
-    'shove-deps.psd1'
+    'shove.ps1',
+    'shove-deps.ps1'
 )
 
-$ShoveHomePath = "$(($env:PSModulePath -split ";")[0])\Shove"
+$SavePath = "$(Split-Path $PROFILE)\Scripts"
 
 function println([String[]]$s){[System.Console]::WriteLine($s -join '')}
 
@@ -36,11 +34,11 @@ function downloadFiles {
 }
 
 
-println 'Create module directory — ',"`e[36m",$ShoveHomePath,"`e[0m"
-New-Item -Type Container -Force -path $ShoveHomePath > $Null
+println 'Create module directory — ',"`e[36m",$SavePath,"`e[0m"
+New-Item -Type Container -Force -path $SavePath > $Null
 
 try {
-    downloadFiles -List $Files -Dest $ShoveHomePath -BaseUrl $GitHubRepoUrl
+    downloadFiles -List $Files -Dest $SavePath -BaseUrl $GitHubRepoUrl
 }
 catch {
     println "`e[91m",'Installation failed',"`e[0m"
@@ -48,4 +46,4 @@ catch {
 }
 
 println "`e[33m",'Installation complete.',"`e[0m"
-println 'Use "',"`e[36m",'Import-Module shove',"`"`e[0m",' and then "',"`e[36m",'shove -Help',"`e[0m`""
+println 'Use "',"`e[36m",'shove',"`"`e[0m",' more info "',"`e[36m",'shove -Help',"`e[0m`""
