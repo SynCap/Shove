@@ -79,9 +79,6 @@ param (
 	[Alias('J')]
 	[Switch] $JustCalc,
 
-	[Alias('H')]
-	[Switch] $Help,
-
 	# This is It!
 	[Alias('R')]
 	[Switch] $Recurse,
@@ -94,13 +91,6 @@ param (
 # if ($PSCmdlet.ShouldProcess((Join-Path $PSScriptRoot 'shove-deps.psm1'), 'Load dependancies')) {
 # 	Import-Module (Join-Path $PSScriptRoot 'shove-deps.psm1') -Force
 # }
-
-if ($Help) {
-	$MyInvocation
-	hr
-	Get-Help $MyInvocation.MyCommand
-	Exit
-}
 
 & '.\shove-deps.ps1'
 
