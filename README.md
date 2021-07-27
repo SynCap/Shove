@@ -66,7 +66,7 @@ the Shove earlier
 
 ## PARAMETERS
 
-###    -SrcDir <String>
+###    -SrcDir _\<String\>_
 
 Folder where to look for files
 
@@ -76,7 +76,7 @@ Folder where to look for files
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-###    -TargetDir <String>
+###    -TargetDir _\<String\>_
 
 Target folder where subfolders will be created
 
@@ -86,7 +86,7 @@ Target folder where subfolders will be created
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -Mask <String>
+### -Mask _\<String\>_
 
 Mask of files which process to
 
@@ -96,7 +96,7 @@ Mask of files which process to
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -MaxSubFolderSize <Int32>
+### -MaxSubFolderSize _\<Int32\>_
 
 Max size of bunch, i.e. maximum size of files in each subfolder
 Note: real size of bunches may overweiht this value, to preview
@@ -108,7 +108,7 @@ exact sizes use -WhatIf first
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -Copy [<SwitchParameter>]
+### -Copy [_\<SwitchParameter\>_]
 
 COPY files instead of MOVE
 
@@ -118,7 +118,7 @@ COPY files instead of MOVE
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -Numeration [<SwitchParameter>]
+### -Numeration [_\<SwitchParameter\>_]
 
 Use autonumeration for new names of files.
 
@@ -128,7 +128,7 @@ Use autonumeration for new names of files.
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -SubfolderCounters [<SwitchParameter>]
+### -SubfolderCounters [_\<SwitchParameter\>_]
 
 The Shove will restart numerations in each subfolder.
 
@@ -138,9 +138,7 @@ The Shove will restart numerations in each subfolder.
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-
-
-### -JustCalc [<SwitchParameter>]
+### -JustCalc [_\<SwitchParameter\>_]
 
 Just calculate repositions and renames, almost like as use -WhatIf
 
@@ -150,7 +148,7 @@ Just calculate repositions and renames, almost like as use -WhatIf
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -Help [<SwitchParameter>]
+### -Help [_\<SwitchParameter\>_]
 
     Required?                    false
     Position?                    named
@@ -158,7 +156,7 @@ Just calculate repositions and renames, almost like as use -WhatIf
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -Recurse [<SwitchParameter>]
+### -Recurse [_\<SwitchParameter\>_]
 
 This is It! Recursive search for the files in all subfolders of Source Directory
 
@@ -168,7 +166,7 @@ This is It! Recursive search for the files in all subfolders of Source Directory
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -KillEmpty [<SwitchParameter>]
+### -KillEmpty [_\<SwitchParameter\>_]
 
 Find and Remove all Empty subfolders
 
@@ -178,7 +176,7 @@ Find and Remove all Empty subfolders
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -WhatIf [<SwitchParameter>]
+### -WhatIf [_\<SwitchParameter\>_]
 
 Don't actually COPY/MOVE files or other actions like *_KILL_* but get detailed
 information about what will be done
@@ -189,7 +187,7 @@ information about what will be done
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### -Confirm [<SwitchParameter>]
+### -Confirm [_\<SwitchParameter\>_]
 
 Lets you check all action one by one
 
@@ -199,7 +197,7 @@ Lets you check all action one by one
     Accept pipeline input?       false
     Accept wildcard characters?  false
 
-### <CommonParameters>
+### _\<CommonParameters\>_
 
 This cmdlet supports the common parameters: `Verbose`, `Debug`,
 `ErrorAction`, `ErrorVariable`, `WarningAction`, `WarningVariable`,
