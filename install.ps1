@@ -35,18 +35,30 @@ function downloadFiles {
     explorer.exe $Dest
 }
 
-function addToPATH {
+function AddPathToEnvPATH {
     param(
         [Parameter(Mandatory=$true)][String[]] $PathToAdd
     )
     $UserPathes = [System.Environment]::GetEnvironmentVariable('PATH',[System.EnvironmentVariableTarget]::User) -split ';'
+    $CurrentPathes = $Env:PATH -split ';'
+    $cntAddToUser = 0
     $PathToAdd.ForEach( {
         if(-not $_ -in $UserPathes) {
             $UserPathes += $_
+            $cntAddToUser ++
+        }
+        if (-not $_ -in $CurrentPathes) {
+            $CurrentPathes += $_
         }
     })
 
-    [System.Environment]::SetEnvironmentVariable('PATH',$UserPathes -join ';',[System.EnvironmentVariableTarget]::User)
+    # Current User Environment PATH wich will available in future started processes
+    if ($cntAddToUser) {
+        [System.Environment]::SetEnvironmentVariable('PATH',$UserPathes -join ';',[System.EnvironmentVariableTarget]::User)
+    }
+
+    # Set Environment for current terminal process
+    $Env:PATH = $CurrentPathes -join ';'
 }
 
 println 'Create module directory — ',"`e[36m",$SavePath,"`e[0m"
@@ -61,7 +73,7 @@ catch {
 }
 
 try {
-    addToPATH $SavePath
+    AddPathToEnvPATH $SavePath
 } catch {
     throw "Can't modify PATH Environment variable."
 }
